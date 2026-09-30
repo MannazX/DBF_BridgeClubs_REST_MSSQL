@@ -13,7 +13,7 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		IMemberClubRepository memberClubRepo;
 		ITournamentRepository tournamentRepo;
 
-		[HttpGet("{clubNo}")]
+		[HttpGet("{clubNo}/MainClub")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<ActionResult<MainClub>> GetClub(string clubNo)
