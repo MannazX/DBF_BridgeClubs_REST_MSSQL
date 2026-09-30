@@ -106,7 +106,7 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<IEnumerable<MainTournament>>> GetTournaments(string clubNo, int clubId)
 		{
-			IEnumerable<MainTournament> result = await tournamentRepo.GetMainTournamentByClubIdAsync(clubNo, clubId);
+			IEnumerable<MainTournament> result = await tournamentRepo.GetMainTournamentsByClubIdAsync(clubNo, clubId);
 			if (result.Count() == 0)
 			{
 				return NoContent();

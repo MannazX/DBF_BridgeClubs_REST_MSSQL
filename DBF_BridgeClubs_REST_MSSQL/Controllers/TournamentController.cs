@@ -49,3 +49,4 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 			}
 		}
 	}
+}
