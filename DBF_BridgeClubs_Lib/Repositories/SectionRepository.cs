@@ -47,8 +47,8 @@ namespace DBF_BridgeClubs_Lib.Repositories
 								int? waveLength = reader.IsDBNull("WAVELENGTH") ? null : reader.GetInt32("WAVELENGTH");
 								int? waveEqWaveIndex = reader.IsDBNull("WAVEEQWAVEINDEX") ? null : reader.GetInt32("WAVEEQWAVEINDEX");
 								int? paymentStatus = reader.IsDBNull("PAYMENTSTATUS") ? null : reader.GetInt32("PAYMENTSTATUS");
-								int? sectionScoreValid = reader.IsDBNull("SECTIONSCOREVALID") ? null : reader.GetInt32("SECTIONSCOREVALID");
-								int? totalScoreValid = reader.IsDBNull("TOTALSCOREVALID") ? null : reader.GetInt32("TOTALSCOREVALID");
+								int? sectionScoreValid = reader.IsDBNull("SECTIONSCOREVALID") ? null : reader.GetInt16("SECTIONSCOREVALID");
+								int? totalScoreValid = reader.IsDBNull("TOTALSCOREVALID") ? null : reader.GetInt16("TOTALSCOREVALID");
 								if (maintournamentId == fkmainTournamentId)
 								{
 									Section section = new Section(sectionId, groupTournamentId, fkmainTournamentId, sectionNo, startTime, endTime, startRoundNo, endRoundNo, waveStartIndex, waveLength, waveEqWaveIndex, paymentStatus, sectionScoreValid, totalScoreValid);

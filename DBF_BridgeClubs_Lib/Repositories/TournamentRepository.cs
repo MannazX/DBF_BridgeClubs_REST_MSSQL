@@ -41,11 +41,11 @@ namespace DBF_BridgeClubs_Lib.Repositories
 								string? name = reader.IsDBNull("NAME") ? null : reader.GetString("NAME");
 								string? description = reader.IsDBNull("DESCRIPTION") ? null : reader.GetString("DESCRIPTION");
 								int? tournamentForm = reader.IsDBNull("TOURNAMENTFORM") ? null : reader.GetInt32("TOURNAMENTFORM");
-								int? commonTop = reader.IsDBNull("COMMONTOP") ? null : reader.GetInt32("COMMONTOP");
+								int? commonTop = reader.IsDBNull("COMMONTOP") ? null : reader.GetInt16("COMMONTOP");
 								int? fkClubId = reader.IsDBNull("FKCLUBID") ? null : reader.GetInt32("FKCLUBID");
-								int? includeClubName = reader.IsDBNull("INCLUDECLUBNAME") ? null : reader.GetInt32("INCLUDECLUBNAME");
-								int? useLeads = reader.IsDBNull("USELEADS") ? null : reader.GetInt32("USELEADS");
-								int? numberOfPlayingDays = reader.IsDBNull("NUMBEROFPLAYINGDAYS") ? null : reader.GetInt32("NUMBEROFPLAYINGDAYS");
+								int? includeClubName = reader.IsDBNull("INCLUDECLUBNAME") ? null : reader.GetInt16("INCLUDECLUBNAME");
+								int? useLeads = reader.IsDBNull("USELEADS") ? null : reader.GetInt16("USELEADS");
+								int? numberOfPlayingDays = reader.IsDBNull("NUMBEROFPLAYINGDAYS") ? null : reader.GetInt16("NUMBEROFPLAYINGDAYS");
 								if (clubId == fkClubId)
 								{
 									MainTournament mainTournament = new MainTournament(mainTournamentId, name, description, tournamentForm, commonTop, fkClubId, includeClubName, useLeads, numberOfPlayingDays);
@@ -83,8 +83,8 @@ namespace DBF_BridgeClubs_Lib.Repositories
 								string? name = reader.IsDBNull("NAME") ? null : reader.GetString("NAME");
 								int? tournementForm = reader.IsDBNull("TOURNAMENTFORM") ? null : reader.GetInt32("TOURNAMENTFORM");
 								int? strengthCount = reader.IsDBNull("STRENGTHGROUPCOUNT") ? null : reader.GetInt32("STRENGTHGROUPCOUNT");
-								int? numberOfGroups = reader.IsDBNull("NUMBEROFGROUPS") ? null : reader.GetInt32("NUMBEROFGROUPS");
-								int? numberOfPlayingDays = reader.IsDBNull("NUMBEROFPLAYINGDAYS") ? null : reader.GetInt32("NUMBEROFPLAYINGDAYS");
+								int? numberOfGroups = reader.IsDBNull("NUMBEROFGROUPS") ? null : reader.GetInt16("NUMBEROFGROUPS");
+								int? numberOfPlayingDays = reader.IsDBNull("NUMBEROFPLAYINGDAYS") ? null : reader.GetInt16("NUMBEROFPLAYINGDAYS");
 								int? groupNo = reader.IsDBNull("GROUPNO") ? null : reader.GetInt32("GROUPNO");
 								int? tournamentType = reader.IsDBNull("TOURNAMENTTYPE") ? null : reader.GetInt32("TOURNAMENTTYPE");
 								int? numberOfTeams = reader.IsDBNull("NUMBEROFTEAMS") ? null : reader.GetInt32("NUMBEROFTEAMS");

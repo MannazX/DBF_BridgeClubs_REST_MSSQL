@@ -42,16 +42,16 @@ namespace DBF_BridgeClubs_Lib.Repositories
 								string? contract = reader.IsDBNull("CONTRACT") ? null : reader.GetString("CONTRACT");
 								string? lead = reader.IsDBNull("LEAD") ? null : reader.GetString("LEAD");
 								int? matchResult = reader.IsDBNull("RESULT") ? null : reader.GetInt32("RESULT");
-								double? calculatedScoreNs = reader.IsDBNull("CALCULATEDSCORENS") ? null : reader.GetInt32("CALCULATEDSCORENS");
-								double? calculatedScoreNspct = reader.IsDBNull("CALCULATEDSCORENSPCT") ? null : reader.GetInt32("CALCULATEDSCORENSPCT");
-								double? calculatedScoreEw = reader.IsDBNull("CALCULATEDSCOREEW") ? null : reader.GetInt32("CALCULATEDSCOREEW");
-								double? calculatedScoreEwpct = reader.IsDBNull("CALCULATEDSCOREEWPCT") ? null : reader.GetInt32("CALCULATEDSCOREEWPCT");
+								double? calculatedScoreNs = reader.IsDBNull("CALCULATEDSCORENS") ? null : reader.GetDouble("CALCULATEDSCORENS");
+								double? calculatedScoreNspct = reader.IsDBNull("CALCULATEDSCORENSPCT") ? null : reader.GetDouble("CALCULATEDSCORENSPCT");
+								double? calculatedScoreEw = reader.IsDBNull("CALCULATEDSCOREEW") ? null : reader.GetDouble("CALCULATEDSCOREEW");
+								double? calculatedScoreEwpct = reader.IsDBNull("CALCULATEDSCOREEWPCT") ? null : reader.GetDouble("CALCULATEDSCOREEWPCT");
 								string? declarer = reader.IsDBNull("DECLARER") ? null : reader.GetString("DECLARER");
 								string? doubling = reader.IsDBNull("DOUBLING") ? null : reader.GetString("DOUBLING");
 								int? tricks = reader.IsDBNull("TRICKS") ? null : reader.GetInt32("TRICKS");
-								int? resultCompleted = reader.IsDBNull("RESULTCOMPLETED") ? null : reader.GetInt32("RESULTCOMPLETED");
-								int? excludeGame = reader.IsDBNull("EXCLUDEGAME") ? null : reader.GetInt32("EXCLUDEGAME");
-								int? boardCompared = reader.IsDBNull("BOARDCOMPARED") ? null : reader.GetInt32("BOARDCOMPARED");
+								int? resultCompleted = reader.IsDBNull("RESULTCOMPLETED") ? null : reader.GetInt16("RESULTCOMPLETED");
+								int? excludeGame = reader.IsDBNull("EXCLUDEGAME") ? null : reader.GetInt16("EXCLUDEGAME");
+								int? boardCompared = reader.IsDBNull("BOARDCOMPARED") ? null : reader.GetInt16("BOARDCOMPARED");
 								if (fksectionId != null && fksectionId == sectionId)
 								{
 									Result result = new Result(resultId, sectionId, boardNo, boardGroup, contract, lead, matchResult, calculatedScoreNs, calculatedScoreNspct, calculatedScoreEw, calculatedScoreEwpct, declarer, doubling, tricks, resultCompleted, excludeGame, boardCompared);

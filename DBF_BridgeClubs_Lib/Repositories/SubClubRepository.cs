@@ -38,11 +38,11 @@ namespace DBF_BridgeClubs_Lib.Repositories
 								int? orgClubId = reader.IsDBNull("ORG_CLUB_ID") ? null : reader.GetInt32("ORG_CLUB_ID");
 								string? clubName = reader.IsDBNull("CLUB_NAME") ? null : reader.GetString("CLUB_NAME");
 								int? leaderId = reader.IsDBNull("LEADER_ID") ? null : reader.GetInt32("LEADER_ID");
-								int? gameDay = reader.IsDBNull("GAME_DAY") ? null : reader.GetInt32("GAME_DAY");
+								int? gameDay = reader.IsDBNull("GAME_DAY") ? null : reader.GetInt16("GAME_DAY");
 								string? noSmoking = reader.IsDBNull("NO_SMOKING") ? null : reader.GetString("NO_SMOKING");
 								string? isVisible = reader.IsDBNull("IS_VISIBLE") ? null : reader.GetString("IS_VISIBLE");
 								string? lastChangedBy = reader.IsDBNull("LAST_CHANGED_BY") ? null : reader.GetString("LAST_CHANGED_BY");
-								TimeOnly? gameTime = reader.IsDBNull(reader.GetOrdinal("GAME_TIME")) ? null : TimeOnly.FromDateTime(reader.GetDateTime(reader.GetOrdinal("GAME_TIME")));
+								TimeOnly? gameTime = reader.IsDBNull(reader.GetOrdinal("GAME_TIME")) ? null : TimeOnly.FromTimeSpan(reader.GetTimeSpan(reader.GetOrdinal("GAME_TIME")));
 								SubClub subClub = new SubClub(clubId, orgClubId, clubName, leaderId, gameDay, noSmoking, isVisible, lastChangedBy, gameTime);
 								subClubs.Add(subClub);
 							}
