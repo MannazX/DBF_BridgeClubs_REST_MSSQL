@@ -13,9 +13,14 @@ namespace DBF_BridgeClubs_Lib.Repositories
 	public class ResultRepository : IResultRepository
 	{
 		private string connectString = Secret.ConnectionString;
-		private string selectSql = "SELECT RE.ID AS RESULTID, S.ID AS SECTIONID, RE.BOARDNO AS BOARDNO, RE.BOARDGROUP AS BOARDGROUP, RE.BIDDINGSEQUENCE AS BIDDINGSEQUENCE, RE.CONTRACT AS CONTRACT, RE.LEAD AS LEAD, RE.RESULT AS RESULT, RE.CALCULATEDSCORENS AS CALCULATEDSCORENS, RE.CALCULATEDSCORENSPCT AS CALCULATEDSCORENSPCT, RE.CALCULATEDSCOREEW AS CALCULATEDSCOREEW, RE.CALCULATEDSCOREEWPCT AS CALCULATEDSCOREEWPCT, RE.DECLARER AS DECLARER, RE.DOUBLING AS DOUBLING, RE.TRICKS AS TRICKS, RE.RESULTCOMPLETED AS RESULTCOMPLETED, RE.EXCLUDEGAME AS EXCLUDEGAME, RE.BOARDCOMPARED AS BOARDCOMPARED FROM @SECTION S JOIN @ROUND R ON R.FKSECTIONID = S.ID JOIN @ROUNDMATCH M ON R.ID = M.FKROUNDID JOIN @RESULT RE ON RE.FKMATCHID = M.ID WHERE S.ID = @SECTIONID";
+		private readonly string selectSql;
 
-		public async Task<IEnumerable<Result>> GetResultsAsync(string clubNo, int sectionId)
+		public ResultRepository(string clubNo)
+		{
+			selectSql = "SELECT RE.ID AS RESULTID, S.ID AS SECTIONID, RE.BOARDNO AS BOARDNO, RE.BOARDGROUP AS BOARDGROUP, RE.BIDDINGSEQUENCE AS BIDDINGSEQUENCE, RE.CONTRACT AS CONTRACT, RE.LEAD AS LEAD, RE.RESULT AS RESULT, RE.CALCULATEDSCORENS AS CALCULATEDSCORENS, RE.CALCULATEDSCORENSPCT AS CALCULATEDSCORENSPCT, RE.CALCULATEDSCOREEW AS CALCULATEDSCOREEW, RE.CALCULATEDSCOREEWPCT AS CALCULATEDSCOREEWPCT, RE.DECLARER AS DECLARER, RE.DOUBLING AS DOUBLING, RE.TRICKS AS TRICKS, RE.RESULTCOMPLETED AS RESULTCOMPLETED, RE.EXCLUDEGAME AS EXCLUDEGAME, RE.BOARDCOMPARED AS BOARDCOMPARED FROM club" + clubNo + ".SECTION S JOIN club" + clubNo + ".ROUND R ON R.FKSECTIONID = S.ID JOIN club" + clubNo + ".ROUNDMATCH M ON R.ID = M.FKROUNDID JOIN club" + clubNo + ".RESULT RE ON RE.FKMATCHID = M.ID WHERE S.ID = @SECTIONID";
+		}
+
+		public async Task<IEnumerable<Result>> GetResultsAsync(int sectionId)
 		{
 			List<Result> results = new List<Result>();
 			using (SqlConnection connect = new SqlConnection(connectString))
@@ -25,10 +30,6 @@ namespace DBF_BridgeClubs_Lib.Repositories
 					await connect.OpenAsync();
 					using (SqlCommand command = new SqlCommand(selectSql, connect))
 					{
-						command.Parameters.AddWithValue("@SECTION", "club" + clubNo + ".SECTION");
-						command.Parameters.AddWithValue("@ROUND", "club" + clubNo + ".ROUND");
-						command.Parameters.AddWithValue("@ROUNDMATCH", "club" + clubNo + ".ROUNDMATCH");
-						command.Parameters.AddWithValue("@RESULT", "club" + clubNo + ".RESULT");
 						command.Parameters.AddWithValue("@SECTIONID", sectionId);
 						using (SqlDataReader reader = await command.ExecuteReaderAsync())
 						{

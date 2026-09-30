@@ -13,10 +13,16 @@ namespace DBF_BridgeClubs_Lib.Repositories
 	public class MemberRepository : IMemberRepository
 	{
 		private string connectString = Secret.ConnectionString;
-		private string selectSql = "SELECT MEMBER_ID, MEMBER_NO, NAME, ADDRESS_1, ADDRESS_2, COUNTRY_CODE, ZIP_CODE, CITY, PHONE_1, PHONE_2, PHONE_3, EMAIL, CLUB_START, TOTAL_BRONZE, TOTAL_SILVER, TOTAL_GOLD, TOTAL_MASTER FROM @MEMBER";
-		private string selectByMemNoSql = "SELECT MEMBER_ID, MEMBER_NO, NAME, ADDRESS_1, ADDRESS_2, COUNTRY_CODE, ZIP_CODE, CITY, PHONE_1, PHONE_2, PHONE_3, EMAIL, CLUB_START, TOTAL_BRONZE, TOTAL_SILVER, TOTAL_GOLD, TOTAL_MASTER FROM @MEMBER WHERE MEMBER_NO = @MEMBER_NO";
+		private readonly string selectSql;
+		private readonly string selectByMemNoSql; 
 
-		public async Task<IEnumerable<Member>> GetMembersAsync(string clubNo)
+		public MemberRepository(string clubNo)
+		{
+			selectSql = "SELECT MEMBER_ID, MEMBER_NO, NAME, ADDRESS_1, ADDRESS_2, COUNTRY_CODE, ZIP_CODE, CITY, PHONE_1, PHONE_2, PHONE_3, EMAIL, CLUB_START, TOTAL_BRONZE, TOTAL_SILVER, TOTAL_GOLD, TOTAL_MASTER FROM club" + clubNo + ".MEM_MEMBER";
+			selectByMemNoSql = "SELECT MEMBER_ID, MEMBER_NO, NAME, ADDRESS_1, ADDRESS_2, COUNTRY_CODE, ZIP_CODE, CITY, PHONE_1, PHONE_2, PHONE_3, EMAIL, CLUB_START, TOTAL_BRONZE, TOTAL_SILVER, TOTAL_GOLD, TOTAL_MASTER FROM club" + clubNo + ".MEM_MEMBER WHERE MEMBER_NO = @MEMBER_NO";
+		}
+
+		public async Task<IEnumerable<Member>> GetMembersAsync()
 		{
 			List<Member> members = new List<Member>();
 			using (SqlConnection connect = new SqlConnection(connectString))
@@ -26,7 +32,6 @@ namespace DBF_BridgeClubs_Lib.Repositories
 					await connect.OpenAsync();
 					using (SqlCommand command = new SqlCommand(selectSql, connect))
 					{
-						command.Parameters.AddWithValue("@MEMBER", "club" + clubNo + ".MEM_MEMBER");
 						using (SqlDataReader reader = await command.ExecuteReaderAsync())
 						{
 							while (await reader.ReadAsync())
@@ -62,7 +67,7 @@ namespace DBF_BridgeClubs_Lib.Repositories
 			return members;
 		}
 
-		public async Task<Member> GetMemberByMemberNoAsync(string clubNo, int memberNo)
+		public async Task<Member> GetMemberByMemberNoAsync(int memberNo)
 		{
 			Member member = new Member();
 			using (SqlConnection connect = new SqlConnection())
@@ -72,7 +77,6 @@ namespace DBF_BridgeClubs_Lib.Repositories
 					await connect.OpenAsync();
 					using (SqlCommand command = new SqlCommand(selectByMemNoSql, connect))
 					{
-						command.Parameters.AddWithValue("@MEMBER", "club" + clubNo + ".MEM_MEMBER");
 						command.Parameters.AddWithValue("@MEMBER_NO", memberNo);
 						using (SqlDataReader reader = await command.ExecuteReaderAsync())
 						{

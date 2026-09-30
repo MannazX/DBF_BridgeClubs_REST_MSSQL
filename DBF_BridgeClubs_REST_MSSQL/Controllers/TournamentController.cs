@@ -11,18 +11,13 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		private ITournamentRepository tournamentRepo;
 		private ISectionRepository sectionRepo;
 
-		public TournamentsController(ITournamentRepository tournamentRepository, ISectionRepository sectionRepository)
-		{
-			tournamentRepo = tournamentRepository;
-			sectionRepo = sectionRepository;
-		}
-
 		[HttpGet("{clubNo}/Tournaments/{mainTournamentId}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<IEnumerable<GroupTournament>>> GetGroupTournaments(string clubNo, int mainTournamentId)
 		{
-			IEnumerable<GroupTournament> result = await tournamentRepo.GetGroupTournamentsByMaintournamentIdAsync(clubNo, mainTournamentId);
+			tournamentRepo = new TournamentRepository(clubNo);
+			IEnumerable<GroupTournament> result = await tournamentRepo.GetGroupTournamentsByMaintournamentIdAsync(mainTournamentId);
 			if (result.Count() == 0)
 			{
 				return NoContent();
@@ -38,7 +33,8 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<IEnumerable<Section>>> GetSections(string clubNo, int mainTournamentId)
 		{
-			IEnumerable<Section> result = await sectionRepo.GetSectionsByMaintournamentIdAsync(clubNo, mainTournamentId);
+			sectionRepo = new SectionRepository(clubNo);
+			IEnumerable<Section> result = await sectionRepo.GetSectionsByMaintournamentIdAsync(mainTournamentId);
 			if (result.Count() == 0)
 			{
 				return NoContent();

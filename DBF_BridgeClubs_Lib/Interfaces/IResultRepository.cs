@@ -4,6 +4,6 @@ namespace DBF_BridgeClubs_Lib.Interfaces
 {
 	public interface IResultRepository
 	{
-		Task<IEnumerable<Result>> GetResultsAsync(string clubNo, int sectionId);
+		Task<IEnumerable<Result>> GetResultsAsync(int sectionId);
 	}
 }

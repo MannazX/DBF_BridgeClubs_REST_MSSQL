@@ -7,26 +7,19 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 {
 	public class ClubController : Controller
 	{
-		private IMainClubRepository mainClubRepo;
-		private IMemberClubRepository memberClubRepo;
-		private IMemberRepository memberRepo;
-		private ISubClubRepository subClubRepo;
-		private ITournamentRepository tournamentRepo;
-		public ClubController(IMainClubRepository mainClubRepository, IMemberClubRepository memberClubRepository, IMemberRepository memRepository, ISubClubRepository subClubRepository, ITournamentRepository tournamentRepository)
-		{
-			mainClubRepo = mainClubRepository;
-			memberClubRepo = memberClubRepository;
-			memberRepo = memRepository;
-			subClubRepo = subClubRepository;
-			tournamentRepo = tournamentRepository;
-		}
+		IMainClubRepository mainClubRepo;
+		ISubClubRepository subClubRepo;
+		IMemberRepository memberRepo;
+		IMemberClubRepository memberClubRepo;
+		ITournamentRepository tournamentRepo;
 
 		[HttpGet("{clubNo}")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<ActionResult<MainClub>> GetClub(string clubNo)
 		{
-			MainClub result = await mainClubRepo.GetMainClubAsync(clubNo);
+			mainClubRepo = new MainClubRepository(clubNo);
+			MainClub result = await mainClubRepo.GetMainClubAsync();
 			if (result == null)
 			{
 				return NotFound();
@@ -42,7 +35,8 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<IEnumerable<SubClub>>> GetSubClub(string clubNo)
 		{
-			IEnumerable<SubClub> result = await subClubRepo.GetSubClubsAsync(clubNo);
+			subClubRepo = new SubClubRepository(clubNo);
+			IEnumerable<SubClub> result = await subClubRepo.GetSubClubsAsync();
 			if (result.Count() == 0)
 			{
 				return NoContent();
@@ -58,7 +52,8 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<IEnumerable<Member>>> GetMembers(string clubNo)
 		{
-			IEnumerable<Member> result = await memberRepo.GetMembersAsync(clubNo);
+			memberRepo = new MemberRepository(clubNo);
+			IEnumerable<Member> result = await memberRepo.GetMembersAsync();
 			if (result.Count() == 0)
 			{
 				return NoContent();
@@ -74,7 +69,8 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public async Task<ActionResult<Member>> GetMembersByNo(string clubNo, int memberNo)
 		{
-			Member result = await memberRepo.GetMemberByMemberNoAsync(clubNo, memberNo);
+			memberRepo = new MemberRepository(clubNo);
+			Member result = await memberRepo.GetMemberByMemberNoAsync(memberNo);
 			if (result == null)
 			{
 				return NotFound();
@@ -85,12 +81,13 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 			}
 		}
 
-		[HttpGet("{fdbNo}/MemberClubs")]
+		[HttpGet("{clubNo}/MemberClubs")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<MemberClub>> GetMemberClubs(string clubNo)
 		{
-			IEnumerable<MemberClub> result = await memberClubRepo.GetMemberClubsAsync(clubNo);
+			memberClubRepo = new MemberClubRepository(clubNo);
+			IEnumerable<MemberClub> result = await memberClubRepo.GetMemberClubsAsync();
 			if (result.Count() == 0)
 			{
 				return NoContent();
@@ -101,12 +98,13 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 			}
 		}
 
-		[HttpGet("{fdbNo}/{clubId}/Tournaments")]
+		[HttpGet("{clubNo}/{clubId}/Tournaments")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<IEnumerable<MainTournament>>> GetTournaments(string clubNo, int clubId)
 		{
-			IEnumerable<MainTournament> result = await tournamentRepo.GetMainTournamentsByClubIdAsync(clubNo, clubId);
+			tournamentRepo = new TournamentRepository(clubNo);
+			IEnumerable<MainTournament> result = await tournamentRepo.GetMainTournamentsByClubIdAsync(clubId);
 			if (result.Count() == 0)
 			{
 				return NoContent();

@@ -13,9 +13,14 @@ namespace DBF_BridgeClubs_Lib.Repositories
 	public class SectionRepository : ISectionRepository
 	{
 		private string connectString = Secret.ConnectionString;
-		private string selectSql = "SELECT S.ID AS SECTIONID, G.ID AS GROUPTOURNAMENTID, G.FKMAINTOURNAMENTID AS MAINTOURNAMENTID, S.SECTIONNO AS SECTIONNO, S.STARTTIME AS STARTTIME, S.ENDTIME AS ENDTIME, S.STARTROUNDNO AS STARTROUNDNO, S.ENDROUNDNO AS ENDROUNDNO, S.WAVESTARTINDEX AS WAVESTARTINDEX, S.WAVELENGTH AS WAVELENGTH, S.WAVEEQWAVEINDEX AS WAVEEQWAVEINDEX, S.PAYMENTSTATUS AS PAYMENTSTATUS, S.SECTIONSCOREVALID AS SECTIONSCOREVALID, S.TOTALSCOREVALID AS TOTALSCOREVALID FROM @GROUPTOURNAMENT G JOIN @SECTION S ON G.ID = S.FKGROUPTOURNAMENTID WHERE G.FKMAINTOURNAMENTID = @MAINTOURNAMENTID";
+		private readonly string selectSql;
 
-		public async Task<IEnumerable<Section>> GetSectionsByMaintournamentIdAsync(string clubNo, int maintournamentId)
+		public SectionRepository(string clubNo)
+		{
+			selectSql = "SELECT S.ID AS SECTIONID, G.ID AS GROUPTOURNAMENTID, G.FKMAINTOURNAMENTID AS MAINTOURNAMENTID, S.SECTIONNO AS SECTIONNO, S.STARTTIME AS STARTTIME, S.ENDTIME AS ENDTIME, S.STARTROUNDNO AS STARTROUNDNO, S.ENDROUNDNO AS ENDROUNDNO, S.WAVESTARTINDEX AS WAVESTARTINDEX, S.WAVELENGTH AS WAVELENGTH, S.WAVEEQWAVEINDEX AS WAVEEQWAVEINDEX, S.PAYMENTSTATUS AS PAYMENTSTATUS, S.SECTIONSCOREVALID AS SECTIONSCOREVALID, S.TOTALSCOREVALID AS TOTALSCOREVALID FROM club" + clubNo + ".GROUPTOURNAMENT G JOIN club" + clubNo + ".SECTION S ON G.ID = S.FKGROUPTOURNAMENTID WHERE G.FKMAINTOURNAMENTID = @MAINTOURNAMENTID";
+		}
+
+		public async Task<IEnumerable<Section>> GetSectionsByMaintournamentIdAsync(int maintournamentId)
 		{
 			List<Section> sections = new List<Section>();
 			using (SqlConnection connect = new SqlConnection(connectString))
@@ -25,8 +30,6 @@ namespace DBF_BridgeClubs_Lib.Repositories
 					await connect.OpenAsync();
 					using (SqlCommand command = new SqlCommand(selectSql, connect))
 					{
-						command.Parameters.AddWithValue("@GROUPTOURNAMENT", "club" + clubNo + ".GROUPTOURNAMENT");
-						command.Parameters.AddWithValue("@SECTION", "club" + clubNo + ".SECTION");
 						command.Parameters.AddWithValue("@MAINTOURNAMENTID", maintournamentId);
 						using (SqlDataReader reader = await command.ExecuteReaderAsync())
 						{

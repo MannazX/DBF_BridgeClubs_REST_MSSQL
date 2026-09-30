@@ -12,19 +12,13 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		IRoundRepository roundRepo;
 		IResultRepository resultRepo;
 
-		public SectionController(ISectionPlayerRepository sectionPlayerRepository, IRoundRepository roundRepository, IResultRepository resultRepository)
-		{
-			sectionPlayerRepo = sectionPlayerRepository;
-			roundRepo = roundRepository;
-			resultRepo = resultRepository;
-		}
-
 		[HttpGet("{clubNo}/Sections/{sectionId}/Participants")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<IEnumerable<SectionPlayer>>> GetParticipants(string clubNo, int sectionId)
 		{
-			IEnumerable<SectionPlayer> result = await sectionPlayerRepo.GetSectionPlayersAsync(clubNo, sectionId);
+			sectionPlayerRepo = new SectionPlayerRepository(clubNo);
+			IEnumerable<SectionPlayer> result = await sectionPlayerRepo.GetSectionPlayersAsync(sectionId);
 			if (result.Count() == 0)
 			{
 				return NoContent();
@@ -40,7 +34,8 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<IEnumerable<Round>>> GetRounds(string clubNo, int sectionId)
 		{
-			IEnumerable<Round> result = await roundRepo.GetRoundsAsync(clubNo, sectionId);
+			roundRepo = new RoundRepository(clubNo);
+			IEnumerable<Round> result = await roundRepo.GetRoundsAsync(sectionId);
 			if (result.Count() == 0)
 			{
 				return NoContent();
@@ -56,7 +51,8 @@ namespace DBF_BridgeClubs_REST_MSSQL.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		public async Task<ActionResult<IEnumerable<Result>>> GetResult(string clubNo, int sectionId)
 		{
-			IEnumerable<Result> result = await resultRepo.GetResultsAsync(clubNo, sectionId);
+			resultRepo = new ResultRepository(clubNo);
+			IEnumerable<Result> result = await resultRepo.GetResultsAsync(sectionId);
 			if (result.Count() == 0)
 			{
 				return NoContent();

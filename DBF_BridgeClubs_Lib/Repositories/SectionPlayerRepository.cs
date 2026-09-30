@@ -13,9 +13,14 @@ namespace DBF_BridgeClubs_Lib.Repositories
 	public class SectionPlayerRepository : ISectionPlayerRepository
 	{
 		private string connectString = Secret.ConnectionString;
-		private string selectSql = "SELECT P.ID AS SECTIONPLAYERID, P.FKSECTIONID AS SECTIONID, P.PLAYERNAME AS PLAYERNAME, P.STARTHAC AS STARTHAC, P.PLAYERNO AS PLAYERNO, P.PAIRNO AS PAIRNO, P.SUBSTITUTE AS SUBSTITUTE, P.ISCAPTAIN AS ISCAPTAIN, M.TOTAL_BRONZE AS TOTAL_BRONZE, M.TOTAL_SILVER AS TOTAL_SILVER, M.TOTAL_GOLD AS TOTAL_GOLD, M.TOTAL_MASTER AS TOTAL_MASTER FROM @SECTIONPLAYER P JOIN SECTIONTEAM T ON P.FKSECTIONTEAMID = T.ID JOIN MEM_MEMBER M ON P.FKPLAYERID = M.MEMBER_ID WHERE P.FKSECTIONID = @SECTIONID";
+		private readonly string selectSql;
 
-		public async Task<IEnumerable<SectionPlayer>> GetSectionPlayersAsync(string clubNo, int sectionId)
+		public SectionPlayerRepository(string clubNo)
+		{
+			selectSql = "SELECT P.ID AS SECTIONPLAYERID, P.FKSECTIONID AS SECTIONID, P.PLAYERNAME AS PLAYERNAME, P.STARTHAC AS STARTHAC, P.PLAYERNO AS PLAYERNO, P.PAIRNO AS PAIRNO, P.SUBSTITUTE AS SUBSTITUTE, P.ISCAPTAIN AS ISCAPTAIN, M.TOTAL_BRONZE AS TOTAL_BRONZE, M.TOTAL_SILVER AS TOTAL_SILVER, M.TOTAL_GOLD AS TOTAL_GOLD, M.TOTAL_MASTER AS TOTAL_MASTER FROM club" + clubNo + ".SECTIONPLAYER P JOIN club" + clubNo + ".SECTIONTEAM T ON P.FKSECTIONTEAMID = T.ID JOIN MEM_MEMBER M ON P.FKPLAYERID = M.MEMBER_ID WHERE P.FKSECTIONID = @SECTIONID";
+		}
+
+		public async Task<IEnumerable<SectionPlayer>> GetSectionPlayersAsync(int sectionId)
 		{
 			List<SectionPlayer> sectionPlayers = new List<SectionPlayer>();
 			using (SqlConnection connect = new SqlConnection(connectString))
@@ -25,7 +30,6 @@ namespace DBF_BridgeClubs_Lib.Repositories
 					connect.OpenAsync();
 					using (SqlCommand command = new SqlCommand(selectSql, connect))
 					{
-						command.Parameters.AddWithValue("@SECTIONPLAYER", "club" + clubNo + ".MEM_MEMBER");
 						using (SqlDataReader reader = await command.ExecuteReaderAsync())
 						{
 							while (await reader.ReadAsync())

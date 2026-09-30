@@ -4,6 +4,6 @@ namespace DBF_BridgeClubs_Lib.Interfaces
 {
 	public interface ISectionRepository
 	{
-		Task<IEnumerable<Section>> GetSectionsByMaintournamentIdAsync(string clubNo, int maintournamentId);
+		Task<IEnumerable<Section>> GetSectionsByMaintournamentIdAsync(int maintournamentId);
 	}
 }

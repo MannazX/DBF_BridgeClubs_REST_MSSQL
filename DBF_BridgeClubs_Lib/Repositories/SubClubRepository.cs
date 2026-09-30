@@ -13,9 +13,14 @@ namespace DBF_BridgeClubs_Lib.Repositories
 	public class SubClubRepository : ISubClubRepository
 	{
 		private string connectString = Secret.ConnectionString;
-		private string selectSql = "SELECT CLUB_ID, ORG_CLUB_ID, CLUB_NAME, LEADER_ID, GAME_DAY, NO_SMOKING, IS_VISIBLE, REMOTE_PROFILE_ID, LAST_CHANGED_BY, GAME_TIME FROM @CLUB";
+		private readonly string selectSql; 
 
-		public async Task<IEnumerable<SubClub>> GetSubClubsAsync(string clubNo)
+		public SubClubRepository(string clubNo)
+		{
+			selectSql = "SELECT CLUB_ID, ORG_CLUB_ID, CLUB_NAME, LEADER_ID, GAME_DAY, NO_SMOKING, IS_VISIBLE, REMOTE_PROFILE_ID, LAST_CHANGED_BY, GAME_TIME FROM club" + clubNo + ".MEM_CLUB";
+		}
+
+		public async Task<IEnumerable<SubClub>> GetSubClubsAsync()
 		{
 			List<SubClub> subClubs = new List<SubClub>();
 			using (SqlConnection connect = new SqlConnection(connectString))
@@ -25,7 +30,6 @@ namespace DBF_BridgeClubs_Lib.Repositories
 					await connect.OpenAsync();
 					using (SqlCommand command = new SqlCommand(selectSql, connect))
 					{
-						command.Parameters.AddWithValue("@CLUB", "club" + clubNo + ".MEM_CLUB");
 						using (SqlDataReader reader = await command.ExecuteReaderAsync())
 						{
 							while (await reader.ReadAsync())

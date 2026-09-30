@@ -10,16 +10,6 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
-IMainClubRepository mainClubRepo = new MainClubRepository();
-IMemberClubRepository memberClubRepo = new MemberClubRepository();
-IMemberRepository memberRepo = new MemberRepository();
-IResultRepository resultRepo = new ResultRepository();
-IRoundRepository roundRepo = new RoundRepository();
-ISectionPlayerRepository sectionPlayer = new SectionPlayerRepository();
-ISectionRepository sectionRepo = new SectionRepository();
-ISubClubRepository subClubRepo = new SubClubRepository();
-ITournamentRepository tournamentRepo = new TournamentRepository();
-
 builder.Services.AddCors(options =>
 {
 	options.AddPolicy("allowGet",
@@ -33,16 +23,6 @@ builder.Services.AddCors(options =>
 				.AllowAnyMethod()
 				.AllowAnyHeader());
 });
-
-builder.Services.AddSingleton<IMainClubRepository>(mainClubRepo);
-builder.Services.AddSingleton<IMemberClubRepository>(memberClubRepo);
-builder.Services.AddSingleton<IMemberRepository>(memberRepo);
-builder.Services.AddSingleton<IResultRepository>(resultRepo);
-builder.Services.AddSingleton<IRoundRepository>(roundRepo);
-builder.Services.AddSingleton<ISectionPlayerRepository>(sectionPlayer);
-builder.Services.AddSingleton<ISectionRepository>(sectionRepo);
-builder.Services.AddSingleton<ISubClubRepository>(subClubRepo);
-builder.Services.AddSingleton<ITournamentRepository>(tournamentRepo);
 
 var app = builder.Build();
 

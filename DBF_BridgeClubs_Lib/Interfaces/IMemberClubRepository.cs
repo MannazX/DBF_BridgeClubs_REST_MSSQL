@@ -4,6 +4,6 @@ namespace DBF_BridgeClubs_Lib.Interfaces
 {
 	public interface IMemberClubRepository
 	{
-		Task<IEnumerable<MemberClub>> GetMemberClubsAsync(string clubNo);
+		Task<IEnumerable<MemberClub>> GetMemberClubsAsync();
 	}
 }

@@ -13,10 +13,16 @@ namespace DBF_BridgeClubs_Lib.Repositories
 	public class TournamentRepository : ITournamentRepository
 	{
 		private string connectString = Secret.ConnectionString;
-		private string selectByClubIdSql = "SELECT ID AS MAINTOURNAMENTID, NAME, DESCRIPTION, TOURNAMENTFORM, COMMONTOP, FKCLUBID, INCLUDECLUBNAME, USELEADS, STRENGTHGROUPCOUNT, NUMBEROFPLAYINGDAYS FROM @MAINTOURNAMENT WHERE FKCLUBID = @CLUBID";
-		private string selectByMainTournamentIdSql = "SELECT M.ID AS MAINTOURNAMENTID, G.ID AS GROUPTOURNAMENTID, M.NAME AS NAME, M.TOURNAMENTFORM AS TOURNAMENTFORM, M.STRENGTHGROUPCOUNT AS STRENGTHGROUPCOUNT, M.NUMBEROFGROUPS AS NUMBEROFGROUPS, M.NUMBEROFPLAYINGDAYS AS NUMBEROFPLAYINGDAYS, G.GROUPNO AS GROUPNO, G.TOURNAMENTTYPE AS TOURNAMENTTYPE, G.NUMBEROFTEAMS AS NUMBEROFTEAMS, G.NUMBEROFSECTIONS AS NUMBEROFSECTIONS, G.NUMBEROFROUNDS AS NUMBEROFROUNDS, G.NUMBEROFTABLES AS NUMBEROFTABLES, G.BOARDSPERROUND AS BOARDSPERROUND, G.HALVESPERMATCH AS HALVESPERMATCH FROM @MAINTOURNAMENT M JOIN @GROUPTOURNAMENT G ON G.FKMAINTOURNAMENTID = M.ID WHERE M.ID = @MAINTOURNAMENTID";
+		private readonly string selectByClubIdSql;
+		private readonly string selectByMainTournamentIdSql;
 
-		public async Task<IEnumerable<MainTournament>> GetMainTournamentsByClubIdAsync(string clubNo, int clubId)
+		public TournamentRepository(string clubNo)
+		{
+			selectByClubIdSql = "SELECT ID AS MAINTOURNAMENTID, NAME, DESCRIPTION, TOURNAMENTFORM, COMMONTOP, FKCLUBID, INCLUDECLUBNAME, USELEADS, STRENGTHGROUPCOUNT, NUMBEROFPLAYINGDAYS FROM club" + clubNo + ".MAINTOURNAMENT WHERE FKCLUBID = @CLUBID";
+			selectByMainTournamentIdSql = "SELECT M.ID AS MAINTOURNAMENTID, G.ID AS GROUPTOURNAMENTID, M.NAME AS NAME, M.TOURNAMENTFORM AS TOURNAMENTFORM, M.STRENGTHGROUPCOUNT AS STRENGTHGROUPCOUNT, M.NUMBEROFGROUPS AS NUMBEROFGROUPS, M.NUMBEROFPLAYINGDAYS AS NUMBEROFPLAYINGDAYS, G.GROUPNO AS GROUPNO, G.TOURNAMENTTYPE AS TOURNAMENTTYPE, G.NUMBEROFTEAMS AS NUMBEROFTEAMS, G.NUMBEROFSECTIONS AS NUMBEROFSECTIONS, G.NUMBEROFROUNDS AS NUMBEROFROUNDS, G.NUMBEROFTABLES AS NUMBEROFTABLES, G.BOARDSPERROUND AS BOARDSPERROUND, G.HALVESPERMATCH AS HALVESPERMATCH FROM club" + clubNo + ".MAINTOURNAMENT M JOIN club" + clubNo + ".GROUPTOURNAMENT G ON G.FKMAINTOURNAMENTID = M.ID WHERE M.ID = @MAINTOURNAMENTID";
+		}
+
+		public async Task<IEnumerable<MainTournament>> GetMainTournamentsByClubIdAsync(int clubId)
 		{
 			List<MainTournament> mainTournaments = new List<MainTournament>();
 			using (SqlConnection connect = new SqlConnection(connectString))
@@ -26,7 +32,6 @@ namespace DBF_BridgeClubs_Lib.Repositories
 					await connect.OpenAsync();
 					using (SqlCommand command = new SqlCommand(selectByClubIdSql, connect))
 					{
-						command.Parameters.AddWithValue("@MAINTOURNAMENT", "club" + clubNo + ".MAINTOURNAMENT");
 						command.Parameters.AddWithValue("@CLUBID", clubId);
 						using (SqlDataReader reader = await command.ExecuteReaderAsync())
 						{
@@ -58,7 +63,7 @@ namespace DBF_BridgeClubs_Lib.Repositories
 			}
 		}
 
-		public async Task<IEnumerable<GroupTournament>> GetGroupTournamentsByMaintournamentIdAsync(string clubNo, int mainTournamentId)
+		public async Task<IEnumerable<GroupTournament>> GetGroupTournamentsByMaintournamentIdAsync(int mainTournamentId)
 		{
 			List<GroupTournament> groupTournaments = new List<GroupTournament>();
 			using (SqlConnection connect = new SqlConnection(connectString))
@@ -68,8 +73,6 @@ namespace DBF_BridgeClubs_Lib.Repositories
 					await connect.OpenAsync();
 					using (SqlCommand command = new SqlCommand(selectByMainTournamentIdSql, connect))
 					{
-						command.Parameters.AddWithValue("@MAINTOURNAMENT", "club" + clubNo + ".MAINTOURNAMENT");
-						command.Parameters.AddWithValue("@GROUPTOURNAMENT", "club" + clubNo + ".GROUPTOURNAMENT");
 						command.Parameters.AddWithValue("@MAINTOURNAMENTID", mainTournamentId);
 						using (SqlDataReader reader = await command.ExecuteReaderAsync())
 						{
